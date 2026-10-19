@@ -1,0 +1,41 @@
+  services:
+    #Service PostgreSQL
+    postgres:
+      container_name: postgres_MEUTIA
+      image: postgres:15-alpine
+      environment:
+        POSTGRES_USER: ${POSTGRES_USER}
+        POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+        PGDATA: /data/postgres
+      volumes:
+        - postgres:/data/postgres
+      ports:
+        - "22079:5432"
+      networks:
+        - postgres
+      restart: unless-stopped
+    
+    #Service PGADMIN4
+    pgadmin:
+      container_name: pgadmin_MEUTIA
+      image: dpage/pgadmin4
+      environment:
+        PGADMIN_DEFAULT_EMAIL: ${PGADMIN_DEFAULT_EMAIL}
+        PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_DEFAULT_PASSWORD}
+        PGADMIN_CONFIG_SERVER_MODE: 'False'
+      volumes:
+        - pgadmin:/var/lib/pgadmin
+
+      ports:
+        - "44079:80"
+      networks:
+        - postgres
+      restart: unless-stopped
+
+  networks:
+    postgres:
+      driver: bridge
+
+  volumes:
+      postgres:
+      pgadmin:
